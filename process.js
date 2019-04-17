@@ -8,13 +8,22 @@ pm2.connect(function(err) {
     process.exit(2);
   }
   
-  pm2.start({
-    script    : 'app.js',         // Script to be run
-    exec_mode : 'cluster',        // Allows your app to be clustered
-    instances : 'max',            // Optional: Scales your app by 4
-    max_memory_restart : '100M'   // Optional: Restarts your app if it reaches 100Mo
-  }, function(err, apps) {
-    pm2.disconnect();   // Disconnects from PM2
-    if (err) throw err
-  });
+  
 });
+pm2.start({
+  script    : 'app.js',
+}, function(err, apps) {
+     pm2.sendDataToProcessId({
+      type: 'process:msg',
+      data: 'toto',
+      topic: 'toto',
+      id: 0
+   }, function(err, res) {
+      if (err)
+       throw err;
+ });
+  if (err) throw err
+});
+
+//pm2.delete(0)
+//pm2.disconnect();
