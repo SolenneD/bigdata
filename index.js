@@ -17,4 +17,3 @@ return csvSplitStream.split(
 }).catch(csvSplitError => {
   console.log('csvSplitStream failed!', csvSplitError);
 });
-
