@@ -9,6 +9,7 @@
 # production
 /build
 /csv
+/csvmove
 StockEtablissement_utf8.csv
 
 

@@ -20,13 +20,19 @@ for(let i = 0 ; i<4 ; i++) {
        pm2.sendDataToProcessId({
         type: 'process:msg',
         data: csvs[i],
+        topic: 'bluh',
         id: i
      }, function(err, res) {
         if (err)
          console.log(err)
    });
   });
-  
   // pm2.delete(0)
   // pm2.disconnect();
 }
+
+pm2.launchBus(function(err, bus) {
+  bus.on('process:msg', function(package) {
+    pm2.delete(package.process.pm_id)
+  });
+});

@@ -1,5 +1,6 @@
 const fs = require("fs")
 const pm2 = require('pm2')
+const moveFile = require('move-file')
 
 let MongoClient = require('mongodb').MongoClient
 let url = "mongodb://localhost:27017/"
@@ -18,6 +19,18 @@ process.on('message', function(package) {
 				dbo.collection('etablissements').insertMany(jsonObj, (err, res) => {
 				if (err) throw err;
 				db.close();
+
+				(async () => {
+					await moveFile(csvFilePath, 'csvmove/'+package.data);
+					console.log('The file has been moved');
+
+					process.send({
+						type : 'process:msg',
+						data : {
+						 success : true
+						}
+				 });
+				})();
 				});
 			});
 		})
