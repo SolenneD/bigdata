@@ -3,16 +3,19 @@
 ### Clone repository
 
 `git clone https://github.com/SolenneD/bigdata.git`
+
 `cd bigdata`
 
 ### Install
 
 `npm install`
+
 `npm install pm2@3.2.5`
 
 ### Create folder
 
 `mkdir csv`
+
 `mkdir csvmove`
 
 ### Download CSV file
@@ -26,6 +29,7 @@ Put the CSV file (unzipped) at the root of the project
 ### Start
 
 Open **MongoDBCompass**
+
 Run port **27017**
 
 Open two shell, in one :
@@ -35,4 +39,5 @@ in the other :
 
 ### End
 When everything is finished
+
 `pm2 delete all`
