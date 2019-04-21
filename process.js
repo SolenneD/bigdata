@@ -13,8 +13,8 @@ pm2.connect((err) => {
 for (let i = 0; i < 4; i += 1) {
   pm2.start({
     script: 'app.js'
-  }, (errorss, appss) => {
-    if (errorss) console.log(appss)
+  }, (error, app) => {
+    if (error) console.log(app)
     pm2.sendDataToProcessId({
       type: 'process:msg',
       data: csvs[i],
@@ -38,11 +38,11 @@ pm2.launchBus((err, bus) => {
       pm2.sendDataToProcessId({
         type: 'process:msg',
         data: csvs[0],
-        topic: 'bluh',
+        topic: 'topic',
         id: 0
-      }, (errorb, res) => {
+      }, (erro, res) => {
         csvs.shift()
-        if (errorb) console.log(res)
+        if (erro) console.log(res)
       })
     })
   })

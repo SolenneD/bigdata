@@ -14,12 +14,10 @@ process.on('message', (pack) => {
     .then((jsonObj) => {
       MongoClient.connect(url, { useNewUrlParser: true }, (err, db) => {
         if (err) throw err
-        const dbo = db.db('bg')
-        dbo.collection('etablissements').insertMany(jsonObj, (or, res) => {
-          if (or) console.log(res)
-          db.close();
-
-          (async () => {
+        const dbo = db.db('bigdata')
+        dbo.collection('establishments').insertMany(jsonObj, (error, res) => {
+          if (error) console.log(res)
+          db.close()(async () => {
             await moveFile(csvFilePath, `csvmove/${pack.data}`)
             console.log('The file has been moved')
 
