@@ -23,16 +23,31 @@ for(let i = 0 ; i<4 ; i++) {
         topic: 'bluh',
         id: i
      }, function(err, res) {
+       csvs.shift
         if (err)
          console.log(err)
    });
   });
-  // pm2.delete(0)
-  // pm2.disconnect();
 }
 
 pm2.launchBus(function(err, bus) {
   bus.on('process:msg', function(package) {
     pm2.delete(package.process.pm_id)
+
+    pm2.start({
+      script    : 'app.js',
+    }, function(err, apps) {
+        console.log(i)
+         pm2.sendDataToProcessId({
+          type: 'process:msg',
+          data: csvs[0],
+          topic: 'bluh',
+          id: i
+       }, function(err, res) {
+        csvs.shift
+          if (err)
+           console.log(err)
+     });
+    });
   });
 });
