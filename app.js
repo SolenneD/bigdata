@@ -1,37 +1,36 @@
-const fs = require("fs")
-const pm2 = require('pm2')
 const moveFile = require('move-file')
 
-let MongoClient = require('mongodb').MongoClient
-let url = "mongodb://localhost:27017/"
+const { MongoClient } = require('mongodb')
 
-const csv=require('csvtojson')
+const url = 'mongodb://localhost:27017/'
 
-process.on('message', function(package) {
-		console.log('GET MESSAGE: ', package.data);
-		const csvFilePath='./csv/'+package.data
-		csv()
-		.fromFile(csvFilePath)
-		.then((jsonObj)=>{
-			MongoClient.connect(url, { useNewUrlParser: true }, (err, db) => {
-				if (err) throw err;
-				var dbo = db.db('bg');
-				dbo.collection('etablissements').insertMany(jsonObj, (err, res) => {
-				if (err) throw err;
-				db.close();
+const csv = require('csvtojson')
 
-				(async () => {
-					await moveFile(csvFilePath, 'csvmove/'+package.data);
-					console.log('The file has been moved');
+process.on('message', (pack) => {
+  console.log('GET MESSAGE: ', pack.data)
+  const csvFilePath = `./csv/${pack.data}`
+  csv()
+    .fromFile(csvFilePath)
+    .then((jsonObj) => {
+      MongoClient.connect(url, { useNewUrlParser: true }, (err, db) => {
+        if (err) throw err
+        const dbo = db.db('bg')
+        dbo.collection('etablissements').insertMany(jsonObj, (or, res) => {
+          if (or) console.log(res)
+          db.close();
 
-					process.send({
-						type : 'process:msg',
-						data : {
-						 success : true
-						}
-				 });
-				})();
-				});
-			});
-		})
-});
+          (async () => {
+            await moveFile(csvFilePath, `csvmove/${pack.data}`)
+            console.log('The file has been moved')
+
+            process.send({
+              type: 'process:msg',
+              data: {
+                success: true
+              }
+            })
+          })()
+        })
+      })
+    })
+})
